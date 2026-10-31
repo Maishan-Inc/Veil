@@ -1,0 +1,28 @@
+{
+  "machine": {
+    "label": "Galaxy A54 (Exynos 1380, Mali-G68 MC4) — 8 GB, en-US, America/New_York — the row seed 424242 picks",
+    "display": {
+      "width": 412,
+      "height": 892,
+      "devicePixelRatio": 2.62
+    }
+  },
+  "os": "android",
+  "seed": 424242,
+  "userAgent": "",
+  "screenWidth": 412,
+  "screenHeight": 780,
+  "panelWidth": 412,
+  "panelHeight": 892,
+  "devicePixelRatio": 2.62,
+  "maxTouchPoints": 5,
+  "timezone": "America/New_York",
+  "locale": "en-US",
+  "languages": ["en-US", "en"],
+  "canvasNoise": "low",
+  "audioNoise": "low",
+  "hardwareConcurrency": 8,
+  "deviceMemory": 8,
+  "webrtcPolicy": "proxyOnly",
+  "location": "40.7128,-74.0060"
+}

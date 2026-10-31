@@ -1,0 +1,11 @@
+node_modules
+dist
+coverage
+target
+pnpm-lock.yaml
+Cargo.lock
+**/*.md
+
+# Machine-written detection-baseline snapshots. The capture tool owns their formatting, and
+# reformatting them here would fight the writer and dirty every diff (tools/detection-baseline/README.md).
+tools/detection-baseline/snapshots

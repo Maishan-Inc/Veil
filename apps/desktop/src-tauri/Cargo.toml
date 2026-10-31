@@ -1,0 +1,37 @@
+[package]
+name = "veil-desktop"
+version = "0.1.0"
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+default-run = "veil-desktop"
+
+[lib]
+name = "veil_desktop"
+crate-type = ["staticlib", "cdylib", "rlib"]
+
+[build-dependencies]
+tauri-build = { version = "2", features = [] }
+
+[dependencies]
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+time = { workspace = true }
+uuid = { workspace = true }
+hex = { workspace = true }
+tauri = { version = "2", features = [] }
+tauri-plugin-dialog = "2.7.1"
+tauri-plugin-updater = "2.9.0"
+
+veil-core = { workspace = true }
+veil-bridge = { workspace = true }
+veil-database = { workspace = true }
+veil-secure-storage = { workspace = true }
+veil-runtime = { workspace = true }
+tempfile = { workspace = true }
+zip = "2.2"
+
+[dev-dependencies]
+sha2 = "0.10"

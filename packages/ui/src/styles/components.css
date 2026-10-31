@@ -1,0 +1,728 @@
+/* Veil UI primitives. Import after tokens.css + global.css. */
+
+/* ---- Button ---- */
+.veil-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--veil-space-sm);
+  height: var(--veil-control-md);
+  padding: 0 var(--veil-space-md);
+  border-radius: var(--veil-radius-md);
+  border: 1px solid transparent;
+  font-size: var(--veil-font-size-body);
+  font-weight: var(--veil-weight-medium);
+  line-height: 1;
+  cursor: pointer;
+  user-select: none;
+  white-space: nowrap;
+  transition:
+    background var(--veil-duration-fast) var(--veil-ease-standard),
+    border-color var(--veil-duration-fast) var(--veil-ease-standard),
+    color var(--veil-duration-fast) var(--veil-ease-standard),
+    transform var(--veil-duration-fast) var(--veil-ease-standard);
+}
+.veil-button:hover:not(:disabled) {
+  transform: translateY(-1px);
+}
+.veil-button:active:not(:disabled) {
+  transform: translateY(0);
+}
+.veil-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.veil-button[data-size="sm"] {
+  height: var(--veil-control-sm);
+  padding: 0 var(--veil-space-md);
+}
+.veil-button[data-size="lg"] {
+  height: var(--veil-control-lg);
+  padding: 0 var(--veil-space-lg);
+  font-size: var(--veil-font-size-title);
+}
+.veil-button[data-variant="primary"] {
+  background: var(--veil-accent);
+  color: var(--veil-text-on-accent);
+}
+.veil-button[data-variant="primary"]:hover:not(:disabled) {
+  background: var(--veil-accent-hover);
+}
+.veil-button[data-variant="primary"]:active:not(:disabled) {
+  background: var(--veil-accent-pressed);
+}
+.veil-button[data-variant="secondary"] {
+  background: var(--veil-bg-subtle);
+  color: var(--veil-text-primary);
+  border-color: var(--veil-stroke-default);
+}
+.veil-button[data-variant="secondary"]:hover:not(:disabled) {
+  background: var(--veil-bg-active);
+}
+.veil-button[data-variant="secondary"]:active:not(:disabled) {
+  background: var(--veil-bg-active);
+}
+.veil-button[data-variant="subtle"] {
+  background: transparent;
+  color: var(--veil-text-primary);
+}
+.veil-button[data-variant="subtle"]:hover:not(:disabled) {
+  background: var(--veil-bg-hover);
+}
+.veil-button[data-variant="subtle"]:active:not(:disabled) {
+  background: var(--veil-bg-active);
+}
+.veil-button[data-variant="danger"] {
+  background: var(--veil-error);
+  color: #ffffff;
+}
+.veil-button[data-variant="danger"]:hover:not(:disabled) {
+  filter: brightness(0.95);
+}
+
+/* ---- Icon button ---- */
+.veil-icon-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: var(--veil-control-md);
+  height: var(--veil-control-md);
+  border-radius: var(--veil-radius-md);
+  border: 1px solid transparent;
+  background: transparent;
+  color: var(--veil-text-secondary);
+  cursor: pointer;
+  transition:
+    background var(--veil-duration-fast) var(--veil-ease-standard),
+    color var(--veil-duration-fast) var(--veil-ease-standard),
+    transform var(--veil-duration-fast) var(--veil-ease-standard);
+}
+.veil-icon-button:hover:not(:disabled) {
+  background: var(--veil-bg-hover);
+  color: var(--veil-text-primary);
+  transform: translateY(-1px);
+}
+.veil-icon-button:active:not(:disabled) {
+  background: var(--veil-bg-active);
+  transform: translateY(0);
+}
+.veil-icon-button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+.veil-icon-button[data-size="sm"] {
+  width: var(--veil-control-sm);
+  height: var(--veil-control-sm);
+}
+.veil-icon-button[data-size="lg"] {
+  width: var(--veil-control-lg);
+  height: var(--veil-control-lg);
+}
+
+/* ---- Fields ---- */
+.veil-field {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.veil-field__label {
+  font-size: var(--veil-font-size-caption);
+  font-weight: var(--veil-weight-semibold);
+  color: var(--veil-text-primary);
+}
+.veil-field__hint {
+  font-size: var(--veil-font-size-caption);
+  color: var(--veil-text-tertiary);
+}
+.veil-input,
+.veil-select {
+  height: var(--veil-control-md);
+  padding: 0 var(--veil-space-md);
+  border-radius: var(--veil-radius-md);
+  border: 1px solid var(--veil-stroke-default);
+  background: var(--veil-bg-subtle);
+  color: var(--veil-text-primary);
+  font-size: var(--veil-font-size-body);
+  transition:
+    border-color var(--veil-duration-fast) var(--veil-ease-standard),
+    box-shadow var(--veil-duration-fast) var(--veil-ease-standard),
+    background var(--veil-duration-fast) var(--veil-ease-standard);
+}
+.veil-input::placeholder {
+  color: var(--veil-text-tertiary);
+}
+.veil-input:focus,
+.veil-select:focus {
+  outline: none;
+  border-color: var(--veil-accent);
+  box-shadow: 0 0 0 2px var(--veil-focus-ring);
+}
+.veil-input:disabled,
+.veil-select:disabled {
+  background: var(--veil-bg-subtle);
+  color: var(--veil-text-disabled);
+  cursor: not-allowed;
+}
+.veil-select {
+  appearance: none;
+  cursor: pointer;
+  padding-right: var(--veil-space-xl);
+}
+
+/* ---- Checkbox ---- */
+.veil-checkbox {
+  width: 16px;
+  height: 16px;
+  accent-color: var(--veil-accent);
+  cursor: pointer;
+}
+.veil-checkbox:disabled {
+  cursor: not-allowed;
+}
+
+/* ---- Badge ---- */
+.veil-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--veil-space-xs);
+  height: 20px;
+  padding: 0 var(--veil-space-sm);
+  border-radius: var(--veil-radius-pill);
+  font-size: var(--veil-font-size-caption);
+  font-weight: var(--veil-weight-medium);
+  background: var(--veil-bg-subtle);
+  color: var(--veil-text-secondary);
+  white-space: nowrap;
+  transition:
+    background var(--veil-duration-fast) var(--veil-ease-standard),
+    color var(--veil-duration-fast) var(--veil-ease-standard),
+    transform var(--veil-duration-fast) var(--veil-ease-standard);
+}
+.veil-badge__dot {
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: currentColor;
+}
+/* Transient states (e.g. "launching") breathe softly to read as active. */
+.veil-badge[data-pulse="true"] .veil-badge__dot {
+  animation: veil-badge-pulse 1.4s var(--veil-ease-standard) infinite;
+}
+@keyframes veil-badge-pulse {
+  0%,
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 0.35;
+    transform: scale(0.72);
+  }
+}
+.veil-badge[data-tone="success"] {
+  background: var(--veil-success-soft);
+  color: var(--veil-success-text);
+}
+.veil-badge[data-tone="warning"] {
+  background: var(--veil-warning-soft);
+  color: var(--veil-warning-text);
+}
+.veil-badge[data-tone="error"] {
+  background: var(--veil-error-soft);
+  color: var(--veil-error-text);
+}
+.veil-badge[data-tone="info"] {
+  background: var(--veil-info-soft);
+  color: var(--veil-info-text);
+}
+.veil-badge[data-tone="accent"] {
+  background: var(--veil-accent-soft);
+  color: var(--veil-accent-text);
+}
+
+/* ---- Spinner ---- */
+.veil-spinner {
+  display: inline-block;
+  box-sizing: border-box;
+  border: 2px solid var(--veil-bg-active);
+  border-top-color: var(--veil-accent);
+  border-radius: 50%;
+  animation: veil-spin 0.6s linear infinite;
+}
+@keyframes veil-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* ---- Progress bar ---- */
+.veil-progress {
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-xs);
+}
+.veil-progress__label {
+  font-size: var(--veil-font-size-caption);
+  line-height: var(--veil-line-caption);
+  color: var(--veil-text-secondary);
+}
+.veil-progress__track {
+  position: relative;
+  height: 6px;
+  width: 100%;
+  background: var(--veil-bg-subtle);
+  border-radius: var(--veil-radius-pill);
+  overflow: hidden;
+}
+.veil-progress__bar {
+  height: 100%;
+  width: 100%;
+  background: var(--veil-accent);
+  border-radius: var(--veil-radius-pill);
+  transform: scaleX(0);
+  transform-origin: left center;
+  transition: transform var(--veil-duration-fast) var(--veil-ease-decelerate);
+}
+.veil-progress[data-tone="success"] .veil-progress__bar {
+  background: var(--veil-success);
+}
+.veil-progress[data-tone="warning"] .veil-progress__bar {
+  background: var(--veil-warning);
+}
+.veil-progress[data-tone="error"] .veil-progress__bar {
+  background: var(--veil-error);
+}
+.veil-progress__bar[data-indeterminate="true"] {
+  width: 35%;
+  transform: translateX(-100%);
+  animation: veil-progress-indeterminate 1.2s var(--veil-ease-standard) infinite;
+}
+@keyframes veil-progress-indeterminate {
+  0% {
+    transform: translateX(-100%);
+  }
+  100% {
+    transform: translateX(286%);
+  }
+}
+
+/* ---- Banner ---- */
+.veil-banner {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--veil-space-md);
+  padding: var(--veil-space-md) var(--veil-space-lg);
+  border-radius: var(--veil-radius-md);
+  background: var(--veil-info-soft);
+  color: var(--veil-info-text);
+  border: 1px solid transparent;
+}
+.veil-banner[data-tone="warning"] {
+  background: var(--veil-warning-soft);
+  color: var(--veil-warning-text);
+}
+.veil-banner[data-tone="error"] {
+  background: var(--veil-error-soft);
+  color: var(--veil-error-text);
+}
+.veil-banner[data-tone="success"] {
+  background: var(--veil-success-soft);
+  color: var(--veil-success-text);
+}
+.veil-banner__body {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-xxs);
+}
+.veil-banner__title {
+  font-weight: var(--veil-weight-semibold);
+}
+.veil-banner__text {
+  color: inherit;
+  opacity: 0.9;
+}
+.veil-banner__action {
+  flex-shrink: 0;
+}
+
+/* ---- Modal / ConfirmDialog ---- */
+.veil-modal__backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: var(--veil-z-overlay);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--veil-space-xl);
+  background: rgba(16, 18, 23, 0.42);
+  backdrop-filter: blur(2px);
+  animation: veil-modal-fade-in 180ms var(--veil-ease-standard) both;
+}
+.veil-modal__backdrop[data-state="closing"] {
+  animation: veil-modal-fade-out 160ms var(--veil-ease-accelerate) both;
+}
+.veil-modal__panel {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  width: min(560px, 100%);
+  max-height: 90vh;
+  background: var(--veil-bg-layer);
+  color: var(--veil-text-primary);
+  border: 1px solid var(--veil-stroke-default);
+  border-radius: var(--veil-radius-lg);
+  box-shadow: var(--veil-shadow-64);
+  outline: none;
+  animation: veil-modal-pop-in 220ms var(--veil-ease-emphasized) both;
+  will-change: opacity, transform;
+}
+.veil-modal__panel[data-state="closing"] {
+  animation: veil-modal-pop-out 150ms var(--veil-ease-accelerate) both;
+}
+.veil-modal__panel[data-size="sm"] {
+  width: min(420px, 100%);
+}
+.veil-modal__panel[data-size="lg"] {
+  width: min(760px, 100%);
+}
+.veil-modal__header {
+  display: flex;
+  align-items: center;
+  gap: var(--veil-space-sm);
+  padding: var(--veil-space-xl);
+  border-bottom: 1px solid var(--veil-stroke-subtle);
+}
+.veil-modal__title {
+  flex: 1;
+  margin: 0;
+  font-size: var(--veil-font-size-title);
+  font-weight: var(--veil-weight-semibold);
+  line-height: var(--veil-line-title);
+}
+.veil-modal__close {
+  flex-shrink: 0;
+  width: var(--veil-control-sm);
+  height: var(--veil-control-sm);
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  border: 0;
+  border-radius: var(--veil-radius-sm);
+  background: transparent;
+  color: var(--veil-text-secondary);
+  font-size: 18px;
+  line-height: 1;
+  cursor: pointer;
+  transition: background var(--veil-duration-fast) var(--veil-ease-standard);
+}
+.veil-modal__close:hover {
+  background: var(--veil-bg-hover);
+  color: var(--veil-text-primary);
+}
+.veil-modal__close:focus-visible {
+  outline: 2px solid var(--veil-focus-ring);
+  outline-offset: 2px;
+}
+.veil-modal__body {
+  padding: var(--veil-space-xl);
+  overflow: auto;
+  flex: 1;
+  font-size: var(--veil-font-size-body);
+  line-height: var(--veil-line-body);
+  color: var(--veil-text-secondary);
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-md);
+}
+.veil-modal__footer {
+  display: flex;
+  flex-direction: row-reverse;
+  justify-content: flex-start;
+  gap: var(--veil-space-sm);
+  padding: var(--veil-space-lg) var(--veil-space-xl) var(--veil-space-xl);
+  border-top: 1px solid var(--veil-stroke-subtle);
+}
+
+/* Generic vertical-stack form, used inside Modal bodies. */
+.veil-form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-md);
+}
+.veil-modal__body > *,
+.veil-form > * {
+  animation: veil-field-enter 140ms var(--veil-ease-decelerate) both;
+}
+.veil-modal__body > *:nth-child(2),
+.veil-form > *:nth-child(2) {
+  animation-delay: 16ms;
+}
+.veil-modal__body > *:nth-child(3),
+.veil-form > *:nth-child(3) {
+  animation-delay: 32ms;
+}
+.veil-modal__body > *:nth-child(4),
+.veil-form > *:nth-child(4) {
+  animation-delay: 48ms;
+}
+.veil-modal__body > *:nth-child(n + 5),
+.veil-form > *:nth-child(n + 5) {
+  animation-delay: 64ms;
+}
+.veil-form textarea.veil-input {
+  resize: vertical;
+  min-height: 80px;
+  padding: var(--veil-space-sm) var(--veil-space-md);
+  font: inherit;
+}
+
+@keyframes veil-modal-fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes veil-modal-fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+@keyframes veil-modal-pop-in {
+  from {
+    opacity: 0;
+    transform: translateY(18px) scale(0.96);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+@keyframes veil-modal-pop-out {
+  from {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateY(10px) scale(0.98);
+  }
+}
+@keyframes veil-field-enter {
+  from {
+    opacity: 0;
+    transform: translateY(4px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+/* ---- Progress ring ---- */
+.veil-ring {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+}
+.veil-ring__svg {
+  display: block;
+  transform: rotate(-90deg);
+}
+.veil-ring__track {
+  stroke: var(--veil-bg-active);
+}
+.veil-ring__arc {
+  stroke: var(--veil-accent);
+  transition: stroke-dashoffset var(--veil-duration-normal) var(--veil-ease-decelerate);
+}
+.veil-ring[data-tone="success"] .veil-ring__arc {
+  stroke: var(--veil-success);
+}
+.veil-ring[data-tone="warning"] .veil-ring__arc {
+  stroke: var(--veil-warning);
+}
+.veil-ring[data-tone="error"] .veil-ring__arc {
+  stroke: var(--veil-error);
+}
+.veil-ring__arc[data-indeterminate="true"] {
+  transition: none;
+  transform-origin: 50% 50%;
+  animation: veil-spin 1.1s linear infinite;
+}
+/* Halo for long-running work: the ring itself keeps carrying the value, the halo only says
+   "still alive". Sits behind the svg and never intercepts pointer events. */
+.veil-ring[data-pulse]::before {
+  content: "";
+  position: absolute;
+  inset: -3px;
+  border-radius: 50%;
+  background: var(--veil-accent);
+  opacity: 0.16;
+  animation: veil-ring-pulse 1.8s var(--veil-ease-standard) infinite;
+  pointer-events: none;
+}
+.veil-ring__center {
+  position: absolute;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-size: var(--veil-font-size-caption);
+  line-height: 1;
+  color: var(--veil-text-secondary);
+  font-variant-numeric: tabular-nums;
+}
+@keyframes veil-ring-pulse {
+  0% {
+    transform: scale(0.94);
+    opacity: 0.05;
+  }
+  50% {
+    transform: scale(1.06);
+    opacity: 0.2;
+  }
+  100% {
+    transform: scale(0.94);
+    opacity: 0.05;
+  }
+}
+
+/* ---- Toast ---- */
+.veil-toast {
+  display: flex;
+  align-items: flex-start;
+  gap: var(--veil-space-sm);
+  min-width: 260px;
+  max-width: 380px;
+  padding: var(--veil-space-sm) var(--veil-space-md);
+  background: var(--veil-bg-overlay);
+  border: 1px solid var(--veil-stroke-default);
+  border-left: 3px solid var(--veil-accent);
+  border-radius: var(--veil-radius-md);
+  box-shadow: var(--veil-shadow-16);
+  animation: veil-toast-in var(--veil-duration-normal) var(--veil-ease-decelerate);
+}
+.veil-toast[data-state="leaving"] {
+  animation: veil-toast-out var(--veil-duration-normal) var(--veil-ease-accelerate) forwards;
+}
+.veil-toast[data-tone="success"] {
+  border-left-color: var(--veil-success);
+}
+.veil-toast[data-tone="warning"] {
+  border-left-color: var(--veil-warning);
+}
+.veil-toast[data-tone="error"] {
+  border-left-color: var(--veil-error);
+}
+.veil-toast__icon {
+  display: inline-flex;
+  align-items: center;
+  color: var(--veil-accent);
+  padding-top: 1px;
+}
+.veil-toast[data-tone="success"] .veil-toast__icon {
+  color: var(--veil-success);
+}
+.veil-toast[data-tone="warning"] .veil-toast__icon {
+  color: var(--veil-warning);
+}
+.veil-toast[data-tone="error"] .veil-toast__icon {
+  color: var(--veil-error);
+}
+.veil-toast__body {
+  flex: 1 1 auto;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.veil-toast__title {
+  font-weight: 600;
+  color: var(--veil-text-primary);
+}
+.veil-toast__text {
+  font-size: var(--veil-font-size-caption);
+  line-height: var(--veil-line-caption);
+  color: var(--veil-text-secondary);
+  overflow-wrap: anywhere;
+}
+.veil-toast__close {
+  flex: none;
+  border: 0;
+  background: transparent;
+  color: var(--veil-text-secondary);
+  font-size: 16px;
+  line-height: 1;
+  padding: 2px 4px;
+  border-radius: var(--veil-radius-xs);
+  cursor: pointer;
+}
+.veil-toast__close:hover {
+  background: var(--veil-bg-hover);
+  color: var(--veil-text-primary);
+}
+@keyframes veil-toast-in {
+  from {
+    opacity: 0;
+    transform: translateX(12px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+}
+@keyframes veil-toast-out {
+  from {
+    opacity: 1;
+    transform: translateX(0) scale(1);
+  }
+  to {
+    opacity: 0;
+    transform: translateX(12px) scale(0.98);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .veil-modal__backdrop,
+  .veil-modal__panel,
+  .veil-modal__body > *,
+  .veil-form > * {
+    animation: none;
+  }
+
+  .veil-modal__panel {
+    will-change: auto;
+  }
+
+  .veil-badge[data-pulse="true"] .veil-badge__dot {
+    animation: none;
+  }
+
+  /* The ring keeps its value — only the motion stops. An indeterminate arc that cannot spin
+     would read as a stalled quarter-circle, so it becomes a full static track instead. */
+  .veil-ring[data-pulse]::before,
+  .veil-ring__arc[data-indeterminate="true"],
+  .veil-toast,
+  .veil-toast[data-state="leaving"] {
+    animation: none;
+  }
+  .veil-ring__arc {
+    transition: none;
+  }
+  .veil-ring__arc[data-indeterminate="true"] {
+    opacity: 0.5;
+    stroke-dasharray: none;
+  }
+
+  .veil-button:hover:not(:disabled),
+  .veil-icon-button:hover:not(:disabled) {
+    transform: none;
+  }
+}

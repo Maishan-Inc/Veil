@@ -1,0 +1,21 @@
+{
+  "os": "windows",
+  "seed": 0,
+  "userAgent": "",
+  "screenWidth": 0,
+  "screenHeight": 0,
+  "panelWidth": 0,
+  "panelHeight": 0,
+  "devicePixelRatio": 0,
+  "timezone": "",
+  "locale": "",
+  "languages": [],
+  "webglVendor": "",
+  "webglRenderer": "",
+  "canvasNoise": "off",
+  "audioNoise": "off",
+  "fonts": [],
+  "hardwareConcurrency": 0,
+  "deviceMemory": 0,
+  "webrtcPolicy": "default"
+}

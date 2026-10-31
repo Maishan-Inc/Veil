@@ -1,0 +1,29 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Veil detection baseline — cross-site frame</title>
+  </head>
+  <body>
+    <!--
+      The measured element comes first and is pinned at 0,0 so `getClientRects()` returns the same
+      box in this page and in the cross-site frame. Keep this block byte-identical to main.html.
+    -->
+    <div
+      id="veil-rect-host"
+      style="
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 400px;
+        font:
+          16px &quot;Segoe UI&quot;,
+          Arial,
+          sans-serif;
+      "
+    >
+      <span id="veil-rect-target">Cwm fjordbank glyphs vext quiz</span>
+    </div>
+    <script type="module" src="/frame.mjs"></script>
+  </body>
+</html>

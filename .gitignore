@@ -1,0 +1,47 @@
+# Node
+node_modules/
+dist/
+dist-ssr/
+coverage/
+*.local
+
+# Rust / Cargo
+target/
+**/*.rs.bk
+
+# Tauri
+apps/desktop/src-tauri/target/
+apps/desktop/src-tauri/gen/
+
+# Veil local runtime + user data (must never be committed)
+.veil-runtime/
+.veil-data/
+
+# Editors / OS
+.vscode/
+.idea/
+*.log
+*.tmp
+.DS_Store
+Thumbs.db
+
+# Local agent / tool workspaces (never published)
+.ai/
+.ai.zip
+.agents/
+.claude/
+.codex/
+.commandcode/
+.cursor/
+.worktrees/
+
+# Detection-baseline corpora are captured locally, not committed.
+tools/detection-baseline/snapshots/
+
+# Agent workspace data (WorkBuddy): local notes, not part of the repo.
+.workbuddy/
+
+# Internal documentation is maintained locally and is never published.
+/docs/
+/AGENTS.md
+/CLAUDE.md

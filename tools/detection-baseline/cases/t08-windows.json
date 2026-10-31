@@ -1,0 +1,26 @@
+{
+  "machine": {
+    "label": "Windows RTX 30-series-class desktop (seed 7)"
+  },
+  "os": "windows",
+  "seed": 7,
+  "userAgent": "",
+  "screenWidth": 0,
+  "screenHeight": 0,
+  "panelWidth": 0,
+  "panelHeight": 0,
+  "devicePixelRatio": 0,
+  "timezone": "",
+  "locale": "",
+  "languages": [],
+  "webglVendor": "",
+  "webglRenderer": "",
+  "canvasNoise": "off",
+  "audioNoise": "off",
+  "fonts": [],
+  "hardwareConcurrency": 0,
+  "deviceMemory": 0,
+  "maxTouchPoints": 0,
+  "webrtcPolicy": "default",
+  "location": ""
+}

@@ -1,0 +1,184 @@
+/* ============================================================
+   Veil design tokens — bespoke, Fluent-inspired.
+   Light theme = :root defaults; Dark theme = [data-theme="dark"].
+   Components consume these variables only — never hard-coded values.
+   ============================================================ */
+
+:root {
+  color-scheme: light;
+
+  /* ---- Typography ---- */
+  --veil-font-sans:
+    "Inter", "Segoe UI Variable", "Segoe UI", system-ui, -apple-system, BlinkMacSystemFont,
+    sans-serif;
+  --veil-font-mono: "JetBrains Mono", ui-monospace, "Cascadia Code", Consolas, monospace;
+
+  --veil-font-size-display: 30px;
+  --veil-font-size-title-lg: 21px;
+  --veil-font-size-title: 17px;
+  --veil-font-size-body: 15px;
+  --veil-font-size-caption: 13px;
+  --veil-font-size-code: 13px;
+
+  --veil-line-display: 38px;
+  --veil-line-title-lg: 30px;
+  --veil-line-title: 24px;
+  --veil-line-body: 22px;
+  --veil-line-caption: 18px;
+  --veil-line-code: 20px;
+
+  --veil-weight-regular: 400;
+  --veil-weight-medium: 500;
+  --veil-weight-semibold: 600;
+
+  /* ---- Spacing (4px base) ---- */
+  --veil-space-xxs: 2px;
+  --veil-space-xs: 4px;
+  --veil-space-sm: 9px;
+  --veil-space-md: 14px;
+  --veil-space-lg: 18px;
+  --veil-space-xl: 26px;
+  --veil-space-2xl: 36px;
+  --veil-space-3xl: 52px;
+
+  /* ---- Radius ---- */
+  --veil-radius-xs: 3px;
+  --veil-radius-sm: 7px;
+  --veil-radius-md: 9px;
+  --veil-radius-lg: 12px;
+  --veil-radius-xl: 18px;
+  --veil-radius-pill: 999px;
+
+  /* ---- Control & layout sizing ---- */
+  --veil-control-sm: 32px;
+  --veil-control-md: 38px;
+  --veil-control-lg: 46px;
+  --veil-toolbar-height: 54px;
+  --veil-statusbar-height: 32px;
+  --veil-sidebar-width: 248px;
+  --veil-sidebar-width-collapsed: 64px;
+
+  /* ---- Motion ---- */
+  --veil-duration-fast: 100ms;
+  --veil-duration-normal: 160ms;
+  --veil-duration-slow: 240ms;
+  --veil-duration-slower: 360ms;
+  --veil-ease-standard: cubic-bezier(0.33, 0, 0.1, 1);
+  --veil-ease-decelerate: cubic-bezier(0.1, 0.9, 0.2, 1);
+  --veil-ease-accelerate: cubic-bezier(0.7, 0, 1, 0.5);
+  --veil-ease-emphasized: cubic-bezier(0.16, 1, 0.3, 1);
+
+  /* ---- Z-index ---- */
+  --veil-z-sticky: 100;
+  --veil-z-overlay: 1000;
+  --veil-z-popover: 1100;
+  --veil-z-toast: 1200;
+
+  /* ---- Brand accent: Veil Iris ---- */
+  --veil-accent: #5640c9;
+  --veil-accent-hover: #4b36b3;
+  --veil-accent-pressed: #3f2d99;
+  --veil-accent-soft: #eceafb;
+  --veil-accent-text: #4733a8;
+  --veil-text-on-accent: #ffffff;
+
+  /* ---- Neutral surfaces ---- */
+  --veil-bg-base: #f6f7f9;
+  --veil-bg-layer: #fbfbfd;
+  --veil-bg-card: #ffffff;
+  --veil-bg-overlay: #ffffff;
+  --veil-bg-subtle: #eff1f4;
+  --veil-bg-hover: rgba(16, 18, 23, 0.04);
+  --veil-bg-active: rgba(16, 18, 23, 0.07);
+  --veil-bg-selected: #eceafb;
+
+  /* ---- Text ---- */
+  --veil-text-primary: #1a1c22;
+  --veil-text-secondary: #4b515c;
+  --veil-text-tertiary: #6b7280;
+  --veil-text-disabled: #a7aebb;
+
+  /* ---- Strokes ---- */
+  --veil-stroke-subtle: #e7eaef;
+  --veil-stroke-default: #dce0e7;
+  --veil-stroke-strong: #c4cad4;
+  --veil-focus-ring: rgba(86, 64, 201, 0.45);
+
+  /* ---- Semantic ---- */
+  --veil-success: #18935a;
+  --veil-success-soft: #e3f5ec;
+  --veil-success-text: #0f7a49;
+  --veil-warning: #c2790b;
+  --veil-warning-soft: #faf0dd;
+  --veil-warning-text: #97600a;
+  --veil-error: #d23b2e;
+  --veil-error-soft: #fbe7e5;
+  --veil-error-text: #b02a20;
+  --veil-info: #2d6fd6;
+  --veil-info-soft: #e6eefb;
+  --veil-info-text: #245cb5;
+
+  /* ---- Elevation (light) ---- */
+  --veil-shadow-2: 0 1px 2px rgba(16, 18, 23, 0.08), 0 0 1px rgba(16, 18, 23, 0.1);
+  --veil-shadow-4: 0 2px 4px rgba(16, 18, 23, 0.1), 0 0 1px rgba(16, 18, 23, 0.1);
+  --veil-shadow-8: 0 4px 8px rgba(16, 18, 23, 0.1), 0 0 1px rgba(16, 18, 23, 0.12);
+  --veil-shadow-16: 0 8px 16px rgba(16, 18, 23, 0.12), 0 0 1px rgba(16, 18, 23, 0.14);
+  --veil-shadow-64: 0 16px 48px rgba(16, 18, 23, 0.2), 0 0 1px rgba(16, 18, 23, 0.16);
+
+  /* ---- Material ---- */
+  --veil-acrylic-fill: rgba(251, 251, 253, 0.72);
+  --veil-acrylic-blur: 20px;
+  --veil-scrollbar-thumb: rgba(16, 18, 23, 0.22);
+}
+
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  --veil-accent: #7e6ddd;
+  --veil-accent-hover: #8e7fe6;
+  --veil-accent-pressed: #6e5bd2;
+  --veil-accent-soft: rgba(126, 109, 221, 0.18);
+  --veil-accent-text: #b3a6f0;
+  --veil-text-on-accent: #ffffff;
+
+  --veil-bg-base: #181818;
+  --veil-bg-layer: #202020;
+  --veil-bg-card: #252525;
+  --veil-bg-overlay: #2d2d2d;
+  --veil-bg-subtle: #2a2a2a;
+  --veil-bg-hover: rgba(255, 255, 255, 0.065);
+  --veil-bg-active: rgba(255, 255, 255, 0.12);
+  --veil-bg-selected: #343434;
+
+  --veil-text-primary: #f4f4f4;
+  --veil-text-secondary: #c8c8c8;
+  --veil-text-tertiary: #9a9a9a;
+  --veil-text-disabled: #626262;
+
+  --veil-stroke-subtle: rgba(255, 255, 255, 0.08);
+  --veil-stroke-default: rgba(255, 255, 255, 0.13);
+  --veil-stroke-strong: rgba(255, 255, 255, 0.24);
+  --veil-focus-ring: rgba(126, 109, 221, 0.55);
+
+  --veil-success: #34b978;
+  --veil-success-soft: rgba(52, 185, 120, 0.18);
+  --veil-success-text: #5ccb95;
+  --veil-warning: #e0a106;
+  --veil-warning-soft: rgba(224, 161, 6, 0.18);
+  --veil-warning-text: #f0be4a;
+  --veil-error: #e2675a;
+  --veil-error-soft: rgba(226, 103, 90, 0.18);
+  --veil-error-text: #f0938a;
+  --veil-info: #5c95ee;
+  --veil-info-soft: rgba(92, 149, 238, 0.18);
+  --veil-info-text: #8db6f4;
+
+  --veil-shadow-2: 0 1px 2px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(0, 0, 0, 0.3);
+  --veil-shadow-4: 0 2px 4px rgba(0, 0, 0, 0.44), 0 0 0 1px rgba(0, 0, 0, 0.3);
+  --veil-shadow-8: 0 4px 10px rgba(0, 0, 0, 0.48), 0 0 0 1px rgba(0, 0, 0, 0.32);
+  --veil-shadow-16: 0 10px 24px rgba(0, 0, 0, 0.52), 0 0 0 1px rgba(0, 0, 0, 0.34);
+  --veil-shadow-64: 0 20px 56px rgba(0, 0, 0, 0.6), 0 0 0 1px rgba(0, 0, 0, 0.36);
+
+  --veil-acrylic-fill: rgba(26, 28, 34, 0.72);
+  --veil-scrollbar-thumb: rgba(255, 255, 255, 0.22);
+}

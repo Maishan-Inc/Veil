@@ -1,0 +1,45 @@
+[
+  {
+    "tag_name": "v122-pro",
+    "name": "Engine v122 Pro",
+    "body": "Pro build. Requires a license key. SHA-256: ffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffffff",
+    "prerelease": false,
+    "draft": false,
+    "assets": [
+      {
+        "name": "engine-pro-windows-x64.zip",
+        "browser_download_url": "https://example.invalid/engine-pro-windows-x64.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v121-draft",
+    "name": "Engine v121",
+    "body": "SHA-256: 1111111111111111111111111111111111111111111111111111111111111111",
+    "prerelease": false,
+    "draft": true,
+    "assets": [
+      {
+        "name": "engine-windows-x64.zip",
+        "browser_download_url": "https://example.invalid/engine-121.zip"
+      }
+    ]
+  },
+  {
+    "tag_name": "v120",
+    "name": "Engine v120",
+    "body": "Windows x64 build.\nSHA-256: 0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef",
+    "prerelease": false,
+    "draft": false,
+    "assets": [
+      {
+        "name": "engine-linux-x64.tar.gz",
+        "browser_download_url": "https://example.invalid/engine-linux.tar.gz"
+      },
+      {
+        "name": "engine-windows-x64.zip",
+        "browser_download_url": "https://example.invalid/engine-windows-x64.zip"
+      }
+    ]
+  }
+]

@@ -1,0 +1,52 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  frontend:
+    name: Frontend (TS / Vitest)
+    runs-on: windows-latest
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+      - uses: actions/setup-node@v4
+        with:
+          # Must stay >= 22.4: the detection-baseline harness uses Node's stable global WebSocket
+          # (tools/detection-baseline/README.md → Toolchain decision). Node 20 went end-of-life 2026-04-30.
+          node-version: 22
+          cache: pnpm
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm format:check
+      - run: pnpm typecheck
+      - run: pnpm test
+
+  backend:
+    name: Backend (cargo / clippy / test)
+    runs-on: windows-latest
+    timeout-minutes: 45
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Strawberry Perl (for bundled SQLCipher/OpenSSL)
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: "5.38"
+          distribution: strawberry
+      - name: Cache cargo registry / build
+        uses: Swatinem/rust-cache@v2
+      - name: Format
+        run: cargo fmt --all -- --check
+      - name: Clippy
+        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: Test
+        run: cargo test --workspace --all-features

@@ -1,0 +1,42 @@
+[workspace]
+resolver = "2"
+members = [
+  "apps/desktop/src-tauri",
+  "crates/core",
+  "crates/database",
+  "crates/secure-storage",
+  "crates/bridge",
+  "crates/runtime",
+]
+
+[workspace.package]
+edition = "2021"
+rust-version = "1.80"
+license = "MIT"
+repository = "https://github.com/veil-app/veil"
+authors = ["Veil contributors"]
+
+[workspace.dependencies]
+# Shared third-party crates (single source of versions)
+anyhow = "1"
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+thiserror = "1"
+time = { version = "0.3", features = ["serde", "formatting", "parsing"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+tempfile = "3"
+hex = "0.4"
+
+# Internal crates
+veil-core = { path = "crates/core" }
+veil-database = { path = "crates/database" }
+veil-secure-storage = { path = "crates/secure-storage" }
+veil-bridge = { path = "crates/bridge" }
+veil-runtime = { path = "crates/runtime" }
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "s"
+panic = "abort"
+strip = true

@@ -1,0 +1,31 @@
+{
+  "machine": {
+    "label": "13-inch Apple Silicon laptop (M3 class) — 8 GB, en-US, America/New_York",
+    "display": {
+      "width": 1470,
+      "height": 956,
+      "devicePixelRatio": 2
+    }
+  },
+  "os": "macos",
+  "seed": 424242,
+  "userAgent": "",
+  "screenWidth": 1280,
+  "screenHeight": 800,
+  "panelWidth": 1470,
+  "panelHeight": 956,
+  "devicePixelRatio": 2,
+  "timezone": "America/New_York",
+  "locale": "en-US",
+  "languages": ["en-US", "en"],
+  "webglVendor": "Google Inc. (Apple)",
+  "webglRenderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M3, Unspecified Version)",
+  "canvasNoise": "low",
+  "audioNoise": "low",
+  "fonts": ["Helvetica Neue", "Menlo", "Monaco", "Optima"],
+  "hardwareConcurrency": 8,
+  "deviceMemory": 8,
+  "maxTouchPoints": 0,
+  "webrtcPolicy": "proxyOnly",
+  "location": "40.7128,-74.0060"
+}

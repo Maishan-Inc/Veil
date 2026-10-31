@@ -1,0 +1,22 @@
+{
+  "os": "macos",
+  "seed": 424242,
+  "userAgent": "",
+  "screenWidth": 1280,
+  "screenHeight": 800,
+  "panelWidth": 0,
+  "panelHeight": 0,
+  "devicePixelRatio": 0,
+  "timezone": "America/New_York",
+  "locale": "en-US",
+  "languages": ["en-US", "en"],
+  "webglVendor": "Google Inc. (Apple)",
+  "webglRenderer": "ANGLE (Apple, ANGLE Metal Renderer: Apple M3, Unspecified Version)",
+  "canvasNoise": "low",
+  "audioNoise": "low",
+  "fonts": ["Helvetica Neue", "Menlo", "Monaco", "Optima"],
+  "hardwareConcurrency": 8,
+  "deviceMemory": 8,
+  "maxTouchPoints": 0,
+  "webrtcPolicy": "proxyOnly"
+}

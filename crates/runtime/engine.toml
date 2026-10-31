@@ -1,0 +1,104 @@
+# Veil engine manifest.
+#
+# Describes the concrete browser engine Veil downloads from GitHub Releases. Veil never
+# implements fingerprinting itself; that lives in the engine's C++ patches. Changing engine
+# is a matter of editing this file (no Rust code changes needed).
+#
+# This manifest is the single source of truth for the engine target: which repository,
+# which release, and which switch vocabulary the installed build actually implements.
+
+[engine]
+# Human-readable name for the engine, surfaced in the UI ("Browser" page).
+name = "Veil-Chromium"
+
+# GitHub repository to fetch releases from. `Veil-Chromium` is Veil's own build of
+# ungoogled-chromium: upstream's `ungoogled-chromium-windows` tree plus (eventually)
+# `patches/veil/`. It keeps upstream's `package.py`, so the asset keeps the
+# `ungoogled-chromium_` prefix and the same single-wrapper-directory zip layout.
+#
+# Rollback target, if the patch set ever becomes unmaintainable: `ungoogled-software` /
+# `ungoogled-chromium-windows` with `flag_dialect = "stock-chromium"`.
+github_owner = "Maishan-Inc"
+github_repo = "Veil-Chromium"
+
+# Regular expressions used to filter releases and assets.
+# - `version_regex`     matches `tag_name`. Capture group 1 is the user-visible version.
+# - `asset_regex`       matches `assets[*].name`.
+# Both regexes are case-insensitive.
+#
+# Tags look like `151.0.7922.137-1.1000` — Chromium version, upstream's release revision, then
+# Veil's packaging revision (`1000`, set in the fork's `revision.txt`). The whole tag is captured
+# because the packaging revision is part of the identity and is what distinguishes a Veil build
+# from the upstream `-1.1` it was cut from. The marker must stay numeric: `version_key` parses
+# components with `unwrap_or(0)`, so an alphabetic tag such as `-veil.1` matches nothing and the
+# Browser page would render an empty list.
+version_regex = "^([0-9]+(?:\\.[0-9]+)+-[0-9]+(?:\\.[0-9]+)*)$"
+
+# The fork publishes x64 only, but upstream's `package.py` naming is retained and a future build
+# may add architectures, so the x64 zip is still pinned exactly.
+asset_regex = "^ungoogled-chromium_.*_windows_x64\\.zip$"
+
+# Path of the engine executable relative to the extracted zip root. The ungoogled zip nests
+# everything under a single `ungoogled-chromium_<tag>_windows_x64/` directory; the install
+# pipeline collapses a lone top-level directory, so this path is relative to the collapsed root.
+exe_path_in_zip = "chrome.exe"
+
+# Where to find the SHA-256 checksum for an asset.
+# Veil itself takes the hash from the GitHub Releases API per-asset `digest` field
+# (`sha256:<hex>`) — computed by GitHub rather than by the publisher, which is strictly better
+# than trusting a file the publisher wrote. That is what `checksum_source` selects, and it stays
+# selected on purpose: a `SHA256SUMS` asset is for a *user* who wants to verify a download
+# independently, not a second source for the installer.
+#
+# `-1.1002` (published 2026-10-11) is the first release that carries one. `upload-release.yml`
+# downloads every asset on the runner, re-hashes it, compares against the build host's
+# measurements, attaches `SHA256SUMS` measured on the runner, and attests build provenance before
+# publishing. The two earlier releases do not carry it: `-1.1000` and `-1.1001` were uploaded by
+# hand from a local build (CI cannot finish a Chromium build),
+# and the workflow had never actually run until `-1.1002` — its first execution found three
+# defects in itself (draft lookup, jq asset filter, checksum asset name), all fixed in
+# `Veil-Chromium` main before the release went out.
+checksum_source = "asset_digest"
+
+# Channel label persisted in the registry (mostly informational for now).
+channel = "stable"
+
+[capabilities]
+# Which switch vocabulary the installed engine actually implements.
+#
+#   "stock-chromium" — clean Chromium / ungoogled-chromium. Supports UA, window size, locale,
+#                      languages, proxy and WebRTC policy only. Canvas / audio / WebGL / font /
+#                      hardware spoofing switches DO NOT EXIST and are ignored silently.
+#   "veil-patched"   — an engine carrying Veil's fingerprint patch set: the stock five plus the
+#                      patch-set vocabulary. Two layers, on purpose:
+#
+#                        Tier 1's five (the flip vocabulary, 5.3):
+#                          --fingerprint=<seed>, --fingerprint-platform=, --timezone=,
+#                          --fingerprint-hardware-concurrency=, --disable-spoofing=
+#                        Stage 6's six, added only after each patch landed AND its read was
+#                        measured (T05: 6.11; T13/T15: 6.18; T22: 6.22):
+#                          --fingerprint-screen-width=, --fingerprint-screen-height=,
+#                          --fingerprint-device-scale-factor=, --fingerprint-max-touch-points=,
+#                          --fingerprint-device-memory=, --fingerprint-location=
+#
+#                      Eleven patched-only switches in total, measured out of the patch set rather
+#                      than inferred from the field names. Every other spoofed surface — canvas and
+#                      audio noise, the WebGL vendor/renderer pair, the font list — is derived from
+#                      the seed and has no switch at all. One more switch reaches the engine on this
+#                      dialect but never through here: `--webrtc-ip=<proxy exit>` is emitted by the
+#                      launch paths beside `--proxy-server` (6.19), because its value is the
+#                      assigned proxy's exit address, not a `Fingerprint` field — its mirror is the
+#                      proxy UI, so `to_engine_args` must not emit it.
+#
+# Chromium ignores unknown switches without complaint, so this value gates which flags
+# `veil_core::to_engine_args` is allowed to emit. Declaring a capability the engine does not
+# have would make Veil report a profile as protected when it is not.
+#
+# Flipped to "veil-patched" 2026-08-23, together with release 151.0.7922.137-1.1001 — the first build
+# that carried the patch set (17 patches then: 14 ported + 3 Veil-authored; 30 by Stage 6's end).
+# The two preconditions this value waited on are both met: Tier 1 landed and was
+# measured per patch, and `to_engine_args` was corrected to emit only switches the set reads
+# All four measured defects that blocked the flip are
+# resolved — 015's collapsed measureText (5.1r, 5.1t), 007's unconditional marker (5.1s), 003's
+# impossible sample rate (5.1u) and 002's frozen 144 version tables (5.1v).
+flag_dialect = "veil-patched"

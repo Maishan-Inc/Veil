@@ -1,0 +1,184 @@
+.settings-card {
+  background: var(--veil-bg-layer);
+  border: 1px solid var(--veil-stroke-default);
+  border-radius: var(--veil-radius-md);
+  padding: var(--veil-space-xl);
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-md);
+  animation: veil-settings-card-enter var(--veil-duration-normal) var(--veil-ease-decelerate) both;
+  transition:
+    background var(--veil-duration-fast) var(--veil-ease-standard),
+    border-color var(--veil-duration-fast) var(--veil-ease-standard),
+    transform var(--veil-duration-fast) var(--veil-ease-standard);
+}
+.settings-card:hover {
+  background: var(--veil-bg-card);
+  border-color: var(--veil-stroke-strong);
+  transform: translateY(-1px);
+}
+.settings-card__title {
+  font-size: var(--veil-font-size-title);
+  font-weight: var(--veil-weight-semibold);
+  margin: 0;
+}
+.settings-card__body {
+  color: var(--veil-text-secondary);
+  margin: 0;
+}
+.settings-card__note {
+  font-size: var(--veil-font-size-caption);
+  line-height: var(--veil-line-caption);
+}
+.settings-card__actions {
+  display: flex;
+  gap: var(--veil-space-sm);
+  flex-wrap: wrap;
+}
+.settings-card__error {
+  margin: 0;
+  color: var(--veil-error-text);
+}
+.settings-path {
+  display: grid;
+  gap: var(--veil-space-xs);
+  padding: var(--veil-space-md);
+  border: 1px solid var(--veil-stroke-subtle);
+  border-radius: var(--veil-radius-sm);
+  background: var(--veil-bg-card);
+}
+.settings-path__label {
+  color: var(--veil-text-secondary);
+  font-size: var(--veil-font-size-caption);
+  font-weight: var(--veil-weight-semibold);
+}
+.settings-path code {
+  color: var(--veil-text-primary);
+  font-family: var(--veil-font-mono);
+  font-size: var(--veil-font-size-code);
+  overflow-wrap: anywhere;
+}
+.settings-path__reason {
+  color: var(--veil-text-tertiary);
+  font-size: var(--veil-font-size-caption);
+  line-height: var(--veil-line-caption);
+}
+.settings-row {
+  display: grid;
+  gap: var(--veil-space-lg);
+  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+}
+.settings-kv {
+  display: grid;
+  grid-template-columns: 220px 1fr;
+  gap: var(--veil-space-sm) var(--veil-space-lg);
+  margin: 0;
+  font-size: var(--veil-font-size-body);
+}
+.settings-kv dt {
+  color: var(--veil-text-secondary);
+}
+.settings-kv dd {
+  margin: 0;
+  overflow-wrap: anywhere;
+}
+.sensitive-action__body {
+  margin: 0;
+  color: var(--veil-text-secondary);
+}
+
+.settings-2fa {
+  display: grid;
+  gap: var(--veil-space-md);
+}
+
+.settings-2fa__qr {
+  width: 208px;
+  height: 208px;
+  display: grid;
+  place-items: center;
+  justify-self: center;
+  border: 1px solid var(--veil-stroke-default);
+  border-radius: var(--veil-radius-md);
+  background: #ffffff;
+}
+
+.settings-ai {
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-md);
+}
+
+.settings-check {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--veil-space-sm);
+  color: var(--veil-text-primary);
+  font-size: var(--veil-font-size-body);
+}
+
+.settings-diagnostics-preview {
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-md);
+}
+
+.settings-diagnostics-events {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-xs);
+  max-height: 320px;
+  overflow-y: auto;
+}
+
+.settings-diagnostics-events__row {
+  display: flex;
+  align-items: center;
+  gap: var(--veil-space-md);
+  padding: var(--veil-space-sm) var(--veil-space-md);
+  border: 1px solid var(--veil-stroke-subtle);
+  border-radius: var(--veil-radius-sm);
+  background: var(--veil-bg-card);
+  flex-wrap: wrap;
+}
+
+.settings-diagnostics-events__row code {
+  color: var(--veil-text-primary);
+  font-family: var(--veil-font-mono);
+  font-size: var(--veil-font-size-code);
+}
+
+.settings-diagnostics-events__row span {
+  color: var(--veil-text-secondary);
+}
+
+@keyframes veil-settings-card-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .settings-card {
+    animation: none;
+  }
+
+  .settings-card:hover {
+    transform: none;
+  }
+}
+
+/* A queued data-directory move: the path is real but nothing has happened yet, so it reads as
+   pending rather than as the current location. */
+.settings-path[data-tone="pending"] {
+  border-color: var(--veil-warning);
+  background: var(--veil-bg-layer);
+}

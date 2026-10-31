@@ -1,0 +1,301 @@
+name: Release
+
+on:
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Release tag, e.g. v0.1.0"
+        required: true
+        default: "v0.1.0"
+        type: string
+      release_name:
+        description: "Release title; empty uses Veil <tag>"
+        required: false
+        default: ""
+        type: string
+      release_body:
+        description: "Release notes; empty uses the default manual build note"
+        required: false
+        default: ""
+        type: string
+      windows_bundle:
+        description: "Windows installer type"
+        required: true
+        default: "both"
+        type: choice
+        options:
+          - nsis
+          - msi
+          - both
+      draft:
+        description: "Create a draft Release"
+        required: true
+        default: true
+        type: boolean
+      prerelease:
+        description: "Mark as a prerelease"
+        required: true
+        default: false
+        type: boolean
+
+concurrency:
+  group: release-${{ inputs.tag }}
+  cancel-in-progress: false
+
+jobs:
+  windows:
+    name: Build Windows installers
+    runs-on: windows-latest
+    timeout-minutes: 75
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout release source
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Validate release source and tag
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ inputs.tag }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if ($env:GITHUB_REF -ne 'refs/heads/main') { throw 'Dispatch releases from main.' }
+          $version = (Get-Content apps/desktop/src-tauri/tauri.conf.json -Raw | ConvertFrom-Json).version
+          if ($env:RELEASE_TAG -cne "v$version") { throw "Tag must be v$version." }
+          git fetch origin --tags
+          if ($LASTEXITCODE -ne 0) { throw 'Could not fetch tags.' }
+          $matchingTag = git tag --list $env:RELEASE_TAG
+          if ($matchingTag) {
+            $existing = git rev-list -n 1 $matchingTag
+            if ($existing -ne $env:GITHUB_SHA) {
+              throw 'Release tag already points to another commit.'
+            }
+          }
+
+      - name: Prepare signing status and configuration
+        id: signing
+        shell: pwsh
+        env:
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          WINDOWS_CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_BASE64 }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          if (-not $env:TAURI_SIGNING_PRIVATE_KEY -or -not $env:TAURI_SIGNING_PRIVATE_KEY_PASSWORD) {
+            throw 'Set TAURI_SIGNING_PRIVATE_KEY and TAURI_SIGNING_PRIVATE_KEY_PASSWORD for updater artifacts.'
+          }
+          $hasCert = [bool]$env:WINDOWS_CERTIFICATE_BASE64
+          $hasPassword = [bool]$env:WINDOWS_CERTIFICATE_PASSWORD
+          if ($hasCert -ne $hasPassword) { throw 'Windows certificate and password must both be set.' }
+          if ($hasCert) {
+            $configPath = Join-Path $env:RUNNER_TEMP 'veil-windows-signing.json'
+            @{
+              bundle = @{
+                windows = @{
+                  signCommand = @{
+                    cmd = 'pwsh'
+                    args = @('-NoProfile', '-File', (Join-Path $env:GITHUB_WORKSPACE 'scripts/sign-windows.ps1'), '%1')
+                  }
+                }
+              }
+            } | ConvertTo-Json -Depth 6 | Set-Content -LiteralPath $configPath
+            "config_path=$($configPath -replace '\\', '/')" >> $env:GITHUB_OUTPUT
+            'signed=true' >> $env:GITHUB_OUTPUT
+          } else {
+            'config_path=' >> $env:GITHUB_OUTPUT
+            'signed=false' >> $env:GITHUB_OUTPUT
+          }
+
+      - name: Resolve release metadata
+        id: release_meta
+        shell: bash
+        env:
+          INPUT_TAG: ${{ inputs.tag }}
+          INPUT_RELEASE_NAME: ${{ inputs.release_name }}
+          INPUT_RELEASE_BODY: ${{ inputs.release_body }}
+          INPUT_DRAFT: ${{ inputs.draft }}
+          INPUT_PRERELEASE: ${{ inputs.prerelease }}
+          INPUT_WINDOWS_BUNDLE: ${{ inputs.windows_bundle }}
+          WINDOWS_SIGNED: ${{ steps.signing.outputs.signed }}
+          SOURCE_REF: ${{ github.ref_name }}
+          SOURCE_SHA: ${{ github.sha }}
+        run: |
+          tag="$INPUT_TAG"
+          name="$INPUT_RELEASE_NAME"
+          body="$INPUT_RELEASE_BODY"
+          source_ref="$SOURCE_REF"
+          source_sha="$SOURCE_SHA"
+
+          if [ "$WINDOWS_SIGNED" = "true" ]; then
+            signing_note="Windows installers: signed with the configured code-signing certificate. Updater artifacts: signed with the Veil updater key."
+          else
+            signing_note="Windows installers: unsigned (no OV/EV code-signing certificate configured). Updater artifacts: signed with the Veil updater key."
+          fi
+
+          if [ -z "$name" ]; then
+            name="Veil $tag"
+          fi
+
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+          echo "name=$name" >> "$GITHUB_OUTPUT"
+          echo "draft=$INPUT_DRAFT" >> "$GITHUB_OUTPUT"
+          echo "prerelease=$INPUT_PRERELEASE" >> "$GITHUB_OUTPUT"
+          echo "commitish=$source_sha" >> "$GITHUB_OUTPUT"
+          {
+            echo "body<<EOF"
+            echo "$signing_note"
+            echo ""
+            if [ -n "$body" ]; then
+              echo "$body"
+            else
+              echo "Manual Windows installer build for Veil."
+            fi
+            echo ""
+            echo "- Release tag: $tag"
+            echo "- Source ref: $source_ref"
+            echo "- Source commit: $source_sha"
+            echo "- Windows installer: $INPUT_WINDOWS_BUNDLE"
+            echo "- Default assets include NSIS .exe and WiX .msi when the bundle selector is both."
+            echo "- MSIX is not generated because the current Tauri CLI supports MSI/NSIS for this project."
+            echo "EOF"
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Create annotated release tag
+        shell: pwsh
+        env:
+          RELEASE_TAG: ${{ steps.release_meta.outputs.tag }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $matchingTag = git tag --list $env:RELEASE_TAG
+          if ($matchingTag) { return }
+          git -c user.name='Veil Release' -c user.email='release@users.noreply.github.com' tag -a $env:RELEASE_TAG -m "Veil $env:RELEASE_TAG"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not create release tag.' }
+          git push origin "refs/tags/$env:RELEASE_TAG"
+          if ($LASTEXITCODE -ne 0) { throw 'Could not push release tag.' }
+
+      - name: Create or update draft release
+        if: ${{ steps.release_meta.outputs.draft == 'true' }}
+        shell: pwsh
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          RELEASE_TAG: ${{ steps.release_meta.outputs.tag }}
+          RELEASE_NAME: ${{ steps.release_meta.outputs.name }}
+          RELEASE_BODY: ${{ steps.release_meta.outputs.body }}
+          RELEASE_COMMITISH: ${{ steps.release_meta.outputs.commitish }}
+          RELEASE_PRERELEASE: ${{ steps.release_meta.outputs.prerelease }}
+        run: |
+          $ErrorActionPreference = "Stop"
+
+          $headers = @{
+            Accept = "application/vnd.github+json"
+            Authorization = "Bearer $env:GITHUB_TOKEN"
+            "X-GitHub-Api-Version" = "2022-11-28"
+          }
+
+          $baseUri = "https://api.github.com/repos/$env:GITHUB_REPOSITORY/releases"
+          $prerelease = [System.Convert]::ToBoolean($env:RELEASE_PRERELEASE)
+          $payload = @{
+            tag_name = $env:RELEASE_TAG
+            target_commitish = $env:RELEASE_COMMITISH
+            name = $env:RELEASE_NAME
+            body = $env:RELEASE_BODY
+            draft = $true
+            prerelease = $prerelease
+          }
+
+          $release = $null
+          $page = 1
+          do {
+            $releases = Invoke-RestMethod -Method Get -Uri "${baseUri}?per_page=100&page=$page" -Headers $headers
+            $release = @($releases) | Where-Object { $_.tag_name -eq $env:RELEASE_TAG } | Select-Object -First 1
+            $page += 1
+          } while (-not $release -and @($releases).Count -eq 100)
+
+          if ($release -and -not $release.draft) {
+            Write-Error "Release '$env:RELEASE_TAG' already exists and is not a draft. Use a new tag or update the existing release manually."
+          }
+
+          $json = $payload | ConvertTo-Json -Depth 4
+          if ($release) {
+            Invoke-RestMethod -Method Patch -Uri "${baseUri}/$($release.id)" -Headers $headers -Body $json -ContentType "application/json"
+            Write-Host "Updated draft release $env:RELEASE_TAG."
+          } else {
+            Invoke-RestMethod -Method Post -Uri $baseUri -Headers $headers -Body $json -ContentType "application/json"
+            Write-Host "Created draft release $env:RELEASE_TAG."
+          }
+
+      - name: Install Strawberry Perl (for bundled SQLCipher/OpenSSL)
+        uses: shogo82148/actions-setup-perl@v1
+        with:
+          perl-version: "5.38"
+          distribution: strawberry
+
+      - name: Setup pnpm
+        uses: pnpm/action-setup@v4
+        with:
+          version: 9.15.0
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          # Kept in step with .github/workflows/ci.yml and package.json `engines.node`.
+          node-version: 22
+          cache: pnpm
+
+      - name: Setup Rust
+        uses: dtolnay/rust-toolchain@stable
+
+      - name: Cache cargo registry / build
+        uses: Swatinem/rust-cache@v2
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Check formatting
+        run: pnpm format:check
+
+      - name: Typecheck
+        run: pnpm typecheck
+
+      - name: Resolve Tauri build arguments
+        id: tauri_args
+        shell: bash
+        env:
+          INPUT_WINDOWS_BUNDLE: ${{ inputs.windows_bundle }}
+          SIGNING_CONFIG: ${{ steps.signing.outputs.config_path }}
+        run: |
+          bundle="$INPUT_WINDOWS_BUNDLE"
+          if [ "$bundle" = "both" ]; then
+            bundle="nsis msi"
+          fi
+
+          args="--bundles $bundle"
+          if [ -n "$SIGNING_CONFIG" ]; then
+            args="$args --config $SIGNING_CONFIG"
+          fi
+          echo "args=$args" >> "$GITHUB_OUTPUT"
+          echo "Resolved Tauri args: $args"
+
+      - name: Build and upload release assets
+        uses: tauri-apps/tauri-action@v0
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_SIGNING_PRIVATE_KEY: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY }}
+          TAURI_SIGNING_PRIVATE_KEY_PASSWORD: ${{ secrets.TAURI_SIGNING_PRIVATE_KEY_PASSWORD }}
+          WINDOWS_CERTIFICATE_BASE64: ${{ secrets.WINDOWS_CERTIFICATE_BASE64 }}
+          WINDOWS_CERTIFICATE_PASSWORD: ${{ secrets.WINDOWS_CERTIFICATE_PASSWORD }}
+        with:
+          projectPath: apps/desktop
+          tauriScript: pnpm tauri
+          tagName: ${{ steps.release_meta.outputs.tag }}
+          releaseCommitish: ${{ steps.release_meta.outputs.commitish }}
+          releaseName: ${{ steps.release_meta.outputs.name }}
+          releaseBody: ${{ steps.release_meta.outputs.body }}
+          releaseDraft: ${{ steps.release_meta.outputs.draft }}
+          prerelease: ${{ steps.release_meta.outputs.prerelease }}
+          includeUpdaterJson: true
+          args: ${{ steps.tauri_args.outputs.args }}

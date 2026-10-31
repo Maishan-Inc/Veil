@@ -1,0 +1,201 @@
+/* Proxy management page. Tokens come from @veil/ui. */
+
+.proxy-subtitle {
+  color: var(--veil-text-tertiary);
+  margin: 0;
+}
+
+.proxy-list {
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-md);
+  width: min(100%, 980px);
+  animation: veil-proxy-list-enter var(--veil-duration-normal) var(--veil-ease-decelerate) both;
+}
+
+.proxy-row {
+  display: flex;
+  align-items: center;
+  gap: var(--veil-space-lg);
+  min-height: 70px;
+  padding: var(--veil-space-md) var(--veil-space-xl);
+  background: var(--veil-bg-layer);
+  border: 1px solid var(--veil-stroke-default);
+  border-radius: var(--veil-radius-md);
+  /* New rows fade+rise in on mount; React reuses existing rows' DOM so they never replay. */
+  animation: veil-proxy-row-enter var(--veil-duration-normal) var(--veil-ease-decelerate) both;
+  transition:
+    border-color var(--veil-duration-fast) var(--veil-ease-standard),
+    background var(--veil-duration-fast) var(--veil-ease-standard),
+    transform var(--veil-duration-fast) var(--veil-ease-standard);
+}
+.proxy-row:hover {
+  border-color: var(--veil-stroke-default);
+  background: var(--veil-bg-card);
+  transform: translateY(-1px);
+}
+
+.proxy-row__main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  gap: var(--veil-space-xxs);
+}
+.proxy-row__title {
+  display: flex;
+  align-items: center;
+  gap: var(--veil-space-sm);
+}
+.proxy-row__name {
+  font-weight: var(--veil-weight-semibold);
+  color: var(--veil-text-primary);
+}
+.proxy-row__meta {
+  display: flex;
+  align-items: center;
+  gap: var(--veil-space-sm);
+  color: var(--veil-text-tertiary);
+  font-size: var(--veil-font-size-caption);
+}
+.proxy-row__addr {
+  font-family: var(--veil-font-mono);
+  font-size: var(--veil-font-size-code);
+}
+.proxy-row__country {
+  font-size: var(--veil-font-size-caption);
+}
+
+.proxy-row__actions {
+  display: flex;
+  align-items: center;
+  gap: var(--veil-space-xs);
+  flex-shrink: 0;
+}
+
+/* Test result badge */
+.proxy-test-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: var(--veil-space-xs);
+  padding: var(--veil-space-xxs) var(--veil-space-sm);
+  border-radius: var(--veil-radius-pill);
+  font-size: var(--veil-font-size-caption);
+  white-space: nowrap;
+  border: 1px solid transparent;
+  transition:
+    background var(--veil-duration-fast) var(--veil-ease-standard),
+    color var(--veil-duration-fast) var(--veil-ease-standard),
+    transform var(--veil-duration-fast) var(--veil-ease-standard);
+}
+.proxy-test-badge--running {
+  background: var(--veil-bg-subtle);
+  color: var(--veil-text-secondary);
+}
+.proxy-test-badge--ok {
+  background: var(--veil-success-soft);
+  color: var(--veil-success-text);
+}
+.proxy-test-badge--error {
+  background: var(--veil-error-soft);
+  color: var(--veil-error-text);
+}
+
+/* Form-internal layout overrides for the Proxy dialog. */
+.proxy-form__host-port {
+  display: grid;
+  grid-template-columns: 2fr 1fr;
+  gap: var(--veil-space-md);
+}
+
+.proxy-credentials {
+  display: grid;
+  gap: var(--veil-space-md);
+}
+
+.proxy-import-result {
+  width: min(100%, 980px);
+  padding: var(--veil-space-sm) var(--veil-space-md);
+  border: 1px solid var(--veil-success-soft);
+  border-radius: var(--veil-radius-sm);
+  background: var(--veil-success-soft);
+  color: var(--veil-success-text);
+  font-size: var(--veil-font-size-caption);
+}
+
+.proxy-batch {
+  display: grid;
+  gap: var(--veil-space-md);
+}
+
+.proxy-batch__textarea {
+  min-height: 220px;
+  resize: vertical;
+  font-family: var(--veil-font-mono);
+  font-size: var(--veil-font-size-code);
+  line-height: var(--veil-line-code);
+}
+
+.proxy-batch__summary {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--veil-space-sm);
+  color: var(--veil-text-secondary);
+  font-size: var(--veil-font-size-caption);
+}
+
+.proxy-batch__invalid {
+  display: grid;
+  gap: var(--veil-space-xs);
+  padding: var(--veil-space-md);
+  border: 1px solid var(--veil-warning-soft);
+  border-radius: var(--veil-radius-sm);
+  background: var(--veil-warning-soft);
+  color: var(--veil-warning-text);
+}
+
+.proxy-batch__invalid-title {
+  font-weight: var(--veil-weight-semibold);
+}
+
+.proxy-batch__invalid code {
+  font-family: var(--veil-font-mono);
+  font-size: var(--veil-font-size-code);
+  overflow-wrap: anywhere;
+}
+
+@keyframes veil-proxy-list-enter {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes veil-proxy-row-enter {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.985);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .proxy-list {
+    animation: none;
+  }
+
+  .proxy-row {
+    animation: none;
+  }
+
+  .proxy-row:hover {
+    transform: none;
+  }
+}
